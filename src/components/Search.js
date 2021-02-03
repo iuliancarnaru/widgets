@@ -3,10 +3,11 @@ import axios from 'axios';
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [results, setResults] = useState([]);
 
   useEffect(() => {
     async function searchWiki() {
-      await axios.get('https://en.wikipedia.org/w/api.php', {
+      const { data } = await axios.get('https://en.wikipedia.org/w/api.php', {
         params: {
           action: 'query',
           list: 'search',
@@ -15,10 +16,34 @@ const Search = () => {
           srsearch: searchTerm,
         },
       });
+      setResults(data.query.search);
     }
 
-    searchWiki();
+    if (searchTerm) {
+      searchWiki();
+    }
   }, [searchTerm]);
+
+  const renderedResults = results.map((result) => {
+    return (
+      <div key={result.pageid} className="item">
+        <div className="right floated content">
+          <a
+            href={`https://en.wikipedia.org/?curid=${result.pageid}`}
+            className="ui button"
+            target="_blank"
+            rel="noreferrer"
+          >
+            GO
+          </a>
+        </div>
+        <div className="content">
+          <div className="header">{result.title}</div>
+        </div>
+        <span dangerouslySetInnerHTML={{ __html: result.snippet }}></span>
+      </div>
+    );
+  });
 
   return (
     <div>
@@ -33,6 +58,7 @@ const Search = () => {
           />
         </div>
       </div>
+      <div className="ui celled list">{renderedResults}</div>
     </div>
   );
 };
