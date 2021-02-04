@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const Dropdown = ({ selected, onSelectedChange, options }) => {
+const Dropdown = ({ labelText, selected, onSelectedChange, options }) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef();
 
@@ -39,7 +39,7 @@ const Dropdown = ({ selected, onSelectedChange, options }) => {
   return (
     <div className="ui form" ref={ref}>
       <div className="field">
-        <label className="label">Select a color</label>
+        <label className="label">{labelText}</label>
         <div
           className={`ui selection dropdown ${isOpen ? 'visible active' : ''}`}
           onClick={() => setIsOpen(!isOpen)}
